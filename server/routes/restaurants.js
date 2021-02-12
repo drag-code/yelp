@@ -1,24 +1,23 @@
 const router = require('express').Router();
 
 router.get('/restaurant', (req, res) => {
-    return res.json({perra: "hola"});
+    return res.status(200).json({perra: "success"});
 });
 
 router.get('/restaurant/:id', (req, res) => {
-    console.log(req);
+    return res.status(200).json({perra: "success"});
 });
 
 router.delete('/restaurant/:id', (req, res) => {
-    return res.json({perra: "eliminada"});
+    return res.status(204).json({perra: "erased"});
 });
 
 router.patch('/restaurant/:id', (req, res) => {
-    const body = req.body;
+    return res.status(200).json({perra: "updated"});
 });
 
 router.post('/restaurant', (req, res) => {
-    const body = req.body;
-    console.log(body);
+    return res.status(201).json({perra: "created"});
 });
 
 module.exports = router;
