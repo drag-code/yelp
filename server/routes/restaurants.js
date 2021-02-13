@@ -1,23 +1,52 @@
-const router = require('express').Router();
+const router = require("express").Router();
+const db = require("../db");
 
-router.get('/restaurant', (req, res) => {
-    return res.status(200).json({perra: "success"});
+router.get("/restaurant", async (req, res) => {
+	const { rows } = await db.query("SELECT * FROM restaurant");
+	return res.status(200).json({ data: rows });
 });
 
-router.get('/restaurant/:id', (req, res) => {
-    return res.status(200).json({perra: "success"});
+router.get("/restaurant/:id", async (req, res) => {
+	const { id } = req.params;
+	const { rows } = await db.query("SELECT * FROM restaurant WHERE id = $1", [
+		id,
+	]);
+	return res.status(200).json({ data: rows[0] });
 });
 
-router.delete('/restaurant/:id', (req, res) => {
-    return res.status(204).json({perra: "erased"});
+router.delete("/restaurant/:id", async (req, res) => {
+	try {
+		const { id } = req.params;
+		const result = await db.query("DELETE FROM restaurant WHERE id = $1", [id]);
+		return res.status(204).json({ perra: "erased" });
+	} catch (error) {
+		console.log(error);
+	}
 });
 
-router.patch('/restaurant/:id', (req, res) => {
-    return res.status(200).json({perra: "updated"});
+router.put("/restaurant/:id", async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { name, location, rate_range } = req.body;
+		const result = await db.query('UPDATE restaurant SET name=$2 , location=$3, rate_range=$4 WHERE id = $1', [id, name, location, rate_range]);
+		return res.status(200).json({ perra: "updated" });
+	} catch (error) {
+        console.log(error);
+    }
 });
 
-router.post('/restaurant', (req, res) => {
-    return res.status(201).json({perra: "created"});
+router.post("/restaurant", async (req, res) => {
+	const { name, location, rate_range } = req.body;
+	try {
+		const result = await db.query(
+			"INSERT INTO restaurant(name, location, rate_range) VALUES($1, $2, $3)",
+			[name, location, rate_range]
+		);
+		console.log(rows);
+		return res.status(201).json({ perra: "created" });
+	} catch (error) {
+		console.log(error);
+	}
 });
 
 module.exports = router;
