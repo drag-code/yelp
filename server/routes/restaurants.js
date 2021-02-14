@@ -3,7 +3,7 @@ const db = require("../db");
 
 router.get("/restaurant", async (req, res) => {
 	const { rows } = await db.query("SELECT * FROM restaurant");
-	return res.status(200).json({ data: rows });
+	return res.status(200).json({ data: {restaurants: rows} });
 });
 
 router.get("/restaurant/:id", async (req, res) => {

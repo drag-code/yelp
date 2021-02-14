@@ -1,6 +1,21 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
+import RestaurantFinder from "../apis/RestaurantFinder";
+import { RestaurantContext } from "../context/RestaurantContext";
 
-function Table() {
+const Table = (props) => {
+	const { restaurants, setRestaurant } = useContext(RestaurantContext);
+
+	const fetchRestaurants = async () => {
+		const response = await RestaurantFinder.get("/");
+		setRestaurant(response.data.data.restaurants);
+	};
+
+	useEffect(() => {
+		try {
+			fetchRestaurants();
+		} catch (error) {}
+	}, []);
+
 	return (
 		<section className="list-group">
 			<table className="table table-hover table-dark table-responsive">
@@ -15,17 +30,25 @@ function Table() {
 					</tr>
 				</thead>
 				<tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td><button className="btn btn-warning">Update</button></td>
-                        <td><button className="btn btn-danger">Delete</button></td>
-                    </tr>
-                </tbody>
+					{restaurants && restaurants.map((restaurant) => {
+						return (
+							<tr key={restaurant.id}>
+								<td>{restaurant.name}</td>
+								<td>{restaurant.location}</td>
+								<td>{"$".repeat(restaurant.rate_range)}</td>
+								<td>reviews</td>
+								<td>
+									<button className="btn btn-warning">Update</button>
+								</td>
+								<td>
+									<button className="btn btn-danger">Delete</button>
+								</td>
+							</tr>
+						);
+					})}
+				</tbody>
 			</table>
 		</section>
 	);
-}
+};
 export default Table;
