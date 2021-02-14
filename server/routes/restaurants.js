@@ -27,22 +27,26 @@ router.delete("/restaurant/:id", async (req, res) => {
 router.put("/restaurant/:id", async (req, res) => {
 	try {
 		const { id } = req.params;
-		const { name, location, rate_range } = req.body;
-		const result = await db.query('UPDATE restaurant SET name=$2 , location=$3, rate_range=$4 WHERE id = $1', [id, name, location, rate_range]);
+		const body = req.body;
+		const params = [...id, ...Object.values(body)];
+		const result = await db.query(
+			"UPDATE restaurant SET name=$2 , location=$3, rate_range=$4 WHERE id = $1",
+			params
+		);
 		return res.status(200).json({ perra: "updated" });
 	} catch (error) {
-        console.log(error);
-    }
+		console.log(error);
+	}
 });
 
 router.post("/restaurant", async (req, res) => {
-	const { name, location, rate_range } = req.body;
+	const body = req.body;
+	const params = Object.values(body);
 	try {
 		const result = await db.query(
 			"INSERT INTO restaurant(name, location, rate_range) VALUES($1, $2, $3)",
-			[name, location, rate_range]
+			params
 		);
-		console.log(rows);
 		return res.status(201).json({ perra: "created" });
 	} catch (error) {
 		console.log(error);
