@@ -39,7 +39,7 @@ function AddRestaurant() {
 					</div>
 					<div className="col-3">
 						<select className="custom-select my-1 mr-sm-2 col-12" onChange={ e => setPriceRange(e.target.value)} value={priceRange}>
-							<option disabled selected>Price range</option>
+							<option disabled>Price range</option>
 							<option value="1">$</option>
 							<option value="2">$$</option>
 							<option value="3">$$$</option>

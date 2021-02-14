@@ -3,7 +3,7 @@ import RestaurantFinder from "../apis/RestaurantFinder";
 import { RestaurantContext } from "../context/RestaurantContext";
 
 const Table = (props) => {
-	const { restaurants, setRestaurant } = useContext(RestaurantContext);
+	const { restaurants, setRestaurant, deleteRestaurants } = useContext(RestaurantContext);
 
 	const fetchRestaurants = async () => {
 		const response = await RestaurantFinder.get("/");
@@ -15,6 +15,16 @@ const Table = (props) => {
 			fetchRestaurants();
 		} catch (error) {}
 	}, []);
+
+	const deleteRestaurant = async(id) => {
+		try {
+			const response = await RestaurantFinder.delete(`/${id}`);
+			console.log(response);
+			deleteRestaurants(id);
+		} catch (error) {
+			
+		}
+	}
 
 	return (
 		<section className="list-group">
@@ -38,10 +48,10 @@ const Table = (props) => {
 								<td>{"$".repeat(restaurant.rate_range)}</td>
 								<td>reviews</td>
 								<td>
-									<button className="btn btn-warning">Update</button>
+									<button className="btn btn-warning" onClick={() => deleteRestaurant(restaurant.id)}>Update</button>
 								</td>
 								<td>
-									<button className="btn btn-danger">Delete</button>
+									<button className="btn btn-danger" onClick={() => deleteRestaurant(restaurant.id)}>Delete</button>
 								</td>
 							</tr>
 						);
